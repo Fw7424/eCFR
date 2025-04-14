@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block head %} 
+    <title>eCFR Corrections Summary</title>
+{% endblock %}
+
+{% block body %}
+    <h1>📘 eCFR Corrections Summary by Agency</h1>
+
+    {% for title in titles %}
+    <div class="accordion">
+        <button class="accordion-button" onclick="toggle('title-{{ title.id }}', this)">
+            {{ title.name }} <span style="font-weight: normal;">({{ title.total }} corrections)</span>
+        </button>
+        <div class="accordion-content" id="title-{{ title.id }}">
+            {% for group, items in title.grouped %}
+            <div class="title-group">
+                <button class="accordion-button" onclick="toggle('group-{{ loop.index }}-{{ title.id }}', this)">
+                    {{ group }} <span style="font-weight: normal;">({{ items|length }} items)</span>
+                </button>
+                <div class="accordion-content" id="group-{{ loop.index }}-{{ title.id }}">
+                    <ul>
+                        {% for item in items %}
+                        <li>
+                            <span class="section-title">Section:</span> {{ item.section or "N/A" }}<br>
+                            <span class="section-title">Year:</span> {{ item.year }}<br>
+                            <span class="section-title">Citation:</span> {{ item.fr_citation or "N/A" }}<br>
+                            <span class="section-title">Action:</span> {{ item.action or "N/A" }}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
+
